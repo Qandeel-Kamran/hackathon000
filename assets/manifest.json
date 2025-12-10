@@ -1,0 +1,96 @@
+{
+  "diagrams": [
+    {
+      "filename": "physical-ai-conceptual.png",
+      "chapter": "Chapter 1: Introduction to Physical AI",
+      "description": "Conceptual diagram showing Physical AI principles and embodied cognition"
+    },
+    {
+      "filename": "humanoid-anatomy.png",
+      "chapter": "Chapter 2: Fundamentals of Humanoid Robotics",
+      "description": "Anatomical diagram of humanoid robot structure and key components"
+    },
+    {
+      "filename": "human-biomechanics.png",
+      "chapter": "Chapter 3: Biomechanics and Human Motion Analysis",
+      "description": "Biomechanical analysis of human motion and gait patterns"
+    },
+    {
+      "filename": "sensor-fusion-architecture.png",
+      "chapter": "Chapter 4: Perception Systems for Physical AI",
+      "description": "Architecture diagram for multimodal sensor fusion systems"
+    },
+    {
+      "filename": "control-architecture.png",
+      "chapter": "Chapter 5: Control Theory for Humanoid Systems",
+      "description": "Hierarchical control architecture for humanoid robots"
+    },
+    {
+      "filename": "walking-gait.png",
+      "chapter": "Chapter 6: Locomotion and Walking Algorithms",
+      "description": "Walking gait diagram showing ZMP trajectory and CoM movement"
+    },
+    {
+      "filename": "manipulation-grasping.png",
+      "chapter": "Chapter 7: Manipulation and Grasping in Physical AI",
+      "description": "Diagram showing grasp planning and dexterous manipulation"
+    },
+    {
+      "filename": "physical-learning.png",
+      "chapter": "Chapter 8: Learning in Physical Environments",
+      "description": "Learning in physical environments diagram with reinforcement learning loop"
+    },
+    {
+      "filename": "hri-social-intelligence.png",
+      "chapter": "Chapter 9: Human-Robot Interaction and Social Intelligence",
+      "description": "Human-robot interaction diagram with social spaces and communication modalities"
+    },
+    {
+      "filename": "advanced-sensory-systems.png",
+      "chapter": "Chapter 10: Advanced Sensory Systems and Multimodal Integration",
+      "description": "Advanced sensory systems diagram with sensor fusion architecture"
+    },
+    {
+      "filename": "dynamic-balance-control.png",
+      "chapter": "Chapter 11: Dynamic Balance and Postural Control",
+      "description": "Dynamic balance control diagram with postural strategies"
+    },
+    {
+      "filename": "whole-body-motion-planning.png",
+      "chapter": "Chapter 12: Whole-Body Motion Planning and Optimization",
+      "description": "Whole-body motion planning diagram with task hierarchy"
+    },
+    {
+      "filename": "cognitive-architectures.png",
+      "chapter": "Chapter 13: Cognitive Architectures for Physical AI",
+      "description": "Cognitive architecture diagram with memory systems and reasoning components"
+    },
+    {
+      "filename": "energy-efficiency.png",
+      "chapter": "Chapter 14: Energy Efficiency and Power Management",
+      "description": "Energy efficiency diagram showing power consumption breakdown"
+    },
+    {
+      "filename": "safety-risk-assessment.png",
+      "chapter": "Chapter 15: Safety and Risk Assessment in Physical AI",
+      "description": "Safety assessment diagram with risk evaluation and emergency response"
+    },
+    {
+      "filename": "hardware-design-principles.png",
+      "chapter": "Chapter 16: Humanoid Robot Hardware Design Principles",
+      "description": "Hardware design diagram showing actuator systems and structural components"
+    },
+    {
+      "filename": "simulation-testing.png",
+      "chapter": "Chapter 17: Simulation and Testing Methodologies",
+      "description": "Simulation and testing diagram with physics simulation and validation"
+    },
+    {
+      "filename": "future-directions.png",
+      "chapter": "Chapter 18: Future Directions and Emerging Technologies",
+      "description": "Future technologies diagram with neuromorphic computing and AI integration"
+    }
+  ],
+  "total_count": 18,
+  "last_updated": "2025-12-10"
+}

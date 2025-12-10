@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git fetch --all --prune)",
+      "Bash(pwsh -File \".specify/scripts/powershell/create-new-feature.ps1\" -Json -ShortName \"physical-ai-book-spec\" -Number 1 \"#specify                                                                                                                                         You are a documentation architect.  \nCreate the full *Specification* for a book titled *Physical AI & Humanoid Robotics*.\n\nYour output must include:\n- A complete Table of Contents with *12–18 chapters*\n- For each chapter:\n  - Chapter title\n  - 3–5 subtopics\n  - Estimated word count range (500–2000 words)\n  - Prerequisite knowledge\n  - 3 measurable learning outcomes\n\nFormat everything cleanly as structured Markdown.\")",
+      "Bash(pwsh -File \".specify/scripts/powershell/setup-plan.ps1\" -Json)"
+    ]
+  }
+}
