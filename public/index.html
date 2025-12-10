@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical AI & Humanoid Robotics - Interactive Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .chapter-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .chapter-number {
+            background-color: var(--secondary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .book-cover {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            border-radius: 8px;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .chapter-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .toc-item {
+            padding: 0.75rem 1rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .toc-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: var(--secondary-color);
+        }
+
+        .toc-item.active {
+            background-color: #e3f2fd;
+            border-left-color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .code-block {
+            background-color: #f4f4f4;
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .callout {
+            border-left: 4px solid #ffc107;
+            background-color: #fff3cd;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .callout.tip {
+            border-left-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .callout.warning {
+            border-left-color: #ffc107;
+            background-color: #fff3cd;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 0.25em solid rgba(0,0,0,0.1);
+            border-top: 0.25em solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn.next {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-robot me-2"></i>
+                <span class="fw-bold">Physical AI Book</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#chapters"><i class="fas fa-book me-1"></i> Chapters</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features"><i class="fas fa-star me-1"></i> Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about"><i class="fas fa-info-circle me-1"></i> About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-3">Physical AI & Humanoid Robotics</h1>
+            <p class="lead mb-4">An Interactive Journey Through Embodied Intelligence</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#chapters" class="btn btn-light btn-lg fw-bold">
+                    <i class="fas fa-book-open me-2"></i>Start Reading
+                </a>
+                <a href="#features" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-star me-2"></i>Explore Features
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Book Cover -->
+        <div class="book-cover">
+            <h2 class="mb-4">Physical AI & Humanoid Robotics</h2>
+            <p class="mb-4">Comprehensive Guide to Embodied Intelligence and Humanoid Systems</p>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0% Complete</div>
+                    </div>
+                    <small class="text-light">Your reading progress</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section id="features" class="mb-5">
+            <h2 class="text-center mb-4">Interactive Learning Features</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h4>Code Examples</h4>
+                        <p>Interactive code snippets in Python and C++ with syntax highlighting and copy functionality.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h4>Smart Search</h4>
+                        <p>Search across all chapters to find specific topics, concepts, or code examples.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <h4>Bookmark System</h4>
+                        <p>Save your favorite sections and return to them later for quick reference.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapters Section -->
+        <section id="chapters">
+            <div class="row">
+                <!-- Table of Contents Sidebar -->
+                <div class="col-lg-4 mb-4">
+                    <div class="sidebar">
+                        <h4 class="mb-4"><i class="fas fa-list me-2"></i>Table of Contents</h4>
+                        <div id="toc-container">
+                            <!-- Chapters will be loaded here dynamically -->
+                            <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+                                <div class="spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div class="sidebar mt-4">
+                        <h5 class="mb-3"><i class="fas fa-search me-2"></i>Search Content</h5>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" id="search-input" placeholder="Search chapters...">
+                        </div>
+                        <div id="search-results" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <!-- Chapter Content Area -->
+                <div class="col-lg-8">
+                    <div id="chapter-display">
+                        <div class="text-center py-5">
+                            <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                            <h4>Select a chapter to begin reading</h4>
+                            <p class="text-muted">Choose a chapter from the table of contents to start exploring Physical AI concepts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Physical AI Book</h5>
+                    <p>Interactive learning platform for Physical AI and Humanoid Robotics concepts.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">Home</a></li>
+                        <li><a href="#chapters" class="text-light">Chapters</a></li>
+                        <li><a href="#features" class="text-light">Features</a></li>
+                        <li><a href="#" class="text-light">Resources</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-github fa-2x"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter fa-2x"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-linkedin fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Physical AI Book. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Chapter data will be loaded here
+        let chapters = [];
+        let currentChapter = null;
+
+        // Load chapters from API
+        async function loadChapters() {
+            try {
+                const response = await fetch('/api/chapters');
+                const data = await response.json();
+                chapters = data.chapters;
+                renderTableOfContents();
+            } catch (error) {
+                console.error('Error loading chapters:', error);
+                document.getElementById('toc-container').innerHTML = '<p class="text-danger">Error loading chapters</p>';
+            }
+        }
+
+        // Render table of contents
+        function renderTableOfContents() {
+            const tocContainer = document.getElementById('toc-container');
+            tocContainer.innerHTML = '';
+
+            chapters.forEach((chapter, index) => {
+                const chapterNum = parseInt(chapter.id);
+                const chapterElement = document.createElement('div');
+                chapterElement.className = 'toc-item';
+                chapterElement.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <div class="chapter-number me-3">${chapterNum}</div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">Chapter ${chapterNum}</div>
+                            <div class="text-muted small">Loading title...</div>
+                        </div>
+                    </div>
+                `;
+                chapterElement.addEventListener('click', () => loadChapter(chapter.id));
+                tocContainer.appendChild(chapterElement);
+
+                // Load chapter title
+                loadChapterTitle(chapter.id, chapterElement);
+            });
+        }
+
+        // Load chapter title
+        async function loadChapterTitle(chapterId, element) {
+            try {
+                const response = await fetch(`/api/chapter/${chapterId}`);
+                const data = await response.json();
+
+                if (data.frontmatter && data.frontmatter.title) {
+                    const titleDiv = element.querySelector('.text-muted');
+                    titleDiv.textContent = data.frontmatter.title;
+                }
+            } catch (error) {
+                console.error(`Error loading title for chapter ${chapterId}:`, error);
+            }
+        }
+
+        // Load and display a chapter
+        async function loadChapter(chapterId) {
+            try {
+                // Update active state in TOC
+                document.querySelectorAll('.toc-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.currentTarget.classList.add('active');
+
+                const response = await fetch(`/api/chapter/${chapterId}`);
+                const data = await response.json();
+
+                currentChapter = chapterId;
+
+                // Process and display the chapter content
+                displayChapter(data, chapterId);
+            } catch (error) {
+                console.error('Error loading chapter:', error);
+                document.getElementById('chapter-display').innerHTML = '<p class="text-danger">Error loading chapter content</p>';
+            }
+        }
+
+        // Display chapter content
+        function displayChapter(data, chapterId) {
+            // Extract title from frontmatter
+            const title = data.frontmatter.title || `Chapter ${chapterId}`;
+
+            // Process the content to handle code blocks, callouts, etc.
+            let processedContent = processMarkdownContent(data.content);
+
+            // Add navigation
+            const prevChapter = parseInt(chapterId) > 1 ? parseInt(chapterId) - 1 : null;
+            const nextChapter = parseInt(chapterId) < 18 ? parseInt(chapterId) + 1 : null;
+
+            let navHtml = '';
+            if (prevChapter || nextChapter) {
+                navHtml = '<div class="chapter-nav">';
+                if (prevChapter) {
+                    navHtml += `<a href="#" class="btn btn-outline-primary nav-btn" onclick="loadChapter('${prevChapter}')">
+                        <i class="fas fa-arrow-left me-1"></i> Previous
+                    </a>`;
+                }
+                if (nextChapter) {
+                    navHtml += `<a href="#" class="btn btn-primary nav-btn next" onclick="loadChapter('${nextChapter}')">
+                        Next <i class="fas fa-arrow-right ms-1"></i>
+                    </a>`;
+                }
+                navHtml += '</div>';
+            }
+
+            document.getElementById('chapter-display').innerHTML = `
+                <div class="chapter-content">
+                    <h2>${title}</h2>
+                    <div class="content-body">${processedContent}</div>
+                    ${navHtml}
+                </div>
+            `;
+        }
+
+        // Process markdown content to HTML
+        function processMarkdownContent(content) {
+            // This is a simplified markdown processor
+            // In a real application, you'd use a library like marked.js
+
+            let html = content;
+
+            // Handle code blocks
+            html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+                return `<div class="code-block"><pre><code class="${lang || ''}">${escapeHtml(code.trim())}</code></pre></div>`;
+            });
+
+            // Handle callouts (tips and warnings)
+            html = html.replace(/:::(tip|warning)\n([\s\S]*?)\n:::/g, (match, type, content) => {
+                const icon = type === 'tip' ? 'fa-lightbulb' : 'fa-exclamation-triangle';
+                const className = type === 'tip' ? 'tip' : 'warning';
+                return `<div class="callout ${className}">
+                    <i class="fas ${icon} me-2"></i>
+                    <strong>${type.charAt(0).toUpperCase() + type.slice(1)}:</strong>
+                    ${content.trim()}
+                </div>`;
+            });
+
+            // Handle headers
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+
+            // Handle paragraphs
+            html = html.replace(/^\s*$(\n\s*\S[\s\S]*?)(?=\n\s*$|$)/gm, '<p>$1</p>');
+
+            // Handle image placeholders
+            html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<div class="text-center my-3"><i class="fas fa-image fa-3x text-muted"></i><p class="text-muted mt-2"><em>Image: $1</em></p></div>');
+
+            // Handle basic formatting
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            return html;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+
+            if (query.length < 2) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            // Simple search implementation
+            const matchingChapters = chapters.filter(chapter => {
+                return chapter.id.toLowerCase().includes(query) ||
+                       chapter.path.toLowerCase().includes(query);
+            });
+
+            if (matchingChapters.length > 0) {
+                let resultsHtml = '<div class="list-group">';
+                matchingChapters.slice(0, 5).forEach(chapter => {
+                    resultsHtml += `
+                        <a href="#" class="list-group-item list-group-item-action"
+                           onclick="loadChapter('${chapter.id}'); document.getElementById('search-input').value=''; document.getElementById('search-results').innerHTML='';">
+                            Chapter ${chapter.id}
+                        </a>
+                    `;
+                });
+                resultsHtml += '</div>';
+                resultsContainer.innerHTML = resultsHtml;
+            } else {
+                resultsContainer.innerHTML = '<p class="text-muted">No results found</p>';
+            }
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChapters();
+        });
+
+        // Make loadChapter available globally for navigation
+        window.loadChapter = loadChapter;
+    </script>
+</body>
+</html>
