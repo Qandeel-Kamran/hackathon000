@@ -460,6 +460,7 @@
             const featureContent = {
                 'interactive-code': {
                     title: 'Interactive Code Examples',
+                    relatedChapters: [3, 4, 5], // Kinematics, Control, ROS Integration
                     examples: [
                         {
                             title: 'Forward Kinematics Example',
@@ -523,6 +524,7 @@ control_output = pid.compute(setpoint=1.0, measured_value=0.5, dt=0.01)`
                 },
                 'system-architecture': {
                     title: 'System Architecture',
+                    relatedChapters: [2, 6, 7], // ROS Basics, Communication, System Design
                     examples: [
                         {
                             title: 'ROS 2 Node Example',
@@ -599,6 +601,7 @@ def main(args=None):
                 },
                 'smart-search': {
                     title: 'Smart Content Search',
+                    relatedChapters: [1, 8, 10], // Introduction, Search Algorithms, AI Applications
                     examples: [
                         {
                             title: 'Search Implementation',
@@ -649,6 +652,7 @@ const results = searchEngine.search('forward kinematics');`
                 },
                 'math-visualization': {
                     title: 'Mathematical Visualization',
+                    relatedChapters: [3, 4, 12], // Kinematics, Control, Mathematical Foundations
                     examples: [
                         {
                             title: 'Rotation Matrix Example',
@@ -781,7 +785,109 @@ bookmarks.addBookmark('Chapter 3', '3.2 Forward Kinematics', 'Important concept 
         }
 
         function showRelatedChapters() {
-            alert('This feature would show related chapters from the textbook that complement this learning feature.');
+            // Get the URL parameters to identify the current feature
+            const urlParams = new URLSearchParams(window.location.search);
+            const featureId = urlParams.get('id');
+
+            if (featureId) {
+                // Load the feature-specific content to get related chapters
+                loadFeatureSpecificContent(featureId);
+
+                // Get the related chapters for this feature
+                const featureContent = {
+                    'interactive-code': {
+                        title: 'Interactive Code Examples',
+                        relatedChapters: [3, 4, 5], // Kinematics, Control, ROS Integration
+                    },
+                    'system-architecture': {
+                        title: 'System Architecture',
+                        relatedChapters: [2, 6, 7], // ROS Basics, Communication, System Design
+                    },
+                    'smart-search': {
+                        title: 'Smart Content Search',
+                        relatedChapters: [1, 8, 10], // Introduction, Search Algorithms, AI Applications
+                    },
+                    'math-visualization': {
+                        title: 'Mathematical Visualization',
+                        relatedChapters: [3, 4, 12], // Kinematics, Control, Mathematical Foundations
+                    },
+                    'smart-bookmarks': {
+                        title: 'Smart Bookmarks',
+                        relatedChapters: [1, 9, 15], // Introduction, Learning Tools, Study Strategies
+                    }
+                };
+
+                if (featureContent[featureId] && featureContent[featureId].relatedChapters) {
+                    const relatedChapters = featureContent[featureId].relatedChapters;
+
+                    // Create HTML for related chapters
+                    let chaptersHtml = '<div class="highlight-box"><h5><i class="fas fa-book me-2"></i>Related Chapters</h5><div class="row mt-3">';
+
+                    relatedChapters.forEach(chapterId => {
+                        chaptersHtml += `
+                            <div class="col-md-6 mb-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Chapter ${chapterId}</h6>
+                                        <p class="card-text">Related content from the textbook.</p>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="loadChapterFromFeature(${chapterId})">Read Chapter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    chaptersHtml += '</div></div>';
+
+                    // Display the related chapters in a modal or update the content area
+                    const modal = document.createElement('div');
+                    modal.className = 'modal fade';
+                    modal.id = 'relatedChaptersModal';
+                    modal.tabIndex = -1;
+                    modal.innerHTML = `
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Related Chapters</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ${chaptersHtml}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Add the modal to the page if it doesn't exist
+                    if (!document.getElementById('relatedChaptersModal')) {
+                        document.body.appendChild(modal);
+                    }
+
+                    // Show the modal
+                    const bootstrapModal = new bootstrap.Modal(document.getElementById('relatedChaptersModal'));
+                    bootstrapModal.show();
+                } else {
+                    alert('No related chapters found for this feature.');
+                }
+            } else {
+                alert('Feature ID not found in URL.');
+            }
+        }
+
+        function loadChapterFromFeature(chapterId) {
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('relatedChaptersModal'));
+            if (modal) {
+                modal.hide();
+            }
+
+            // Redirect to the main index page and load the specific chapter
+            // We need to go to the main page since chapters are loaded there
+            // Pass the chapter ID as a parameter so it can be loaded automatically
+            window.location.href = `../index.html?loadChapter=${chapterId}`;
         }
 
         function showCodeExamples() {
@@ -1048,6 +1154,7 @@ def example_function():
         window.goToFeatures = goToFeatures;
         window.showSubContent = showSubContent;
         window.goToRelatedContent = goToRelatedContent;
+        window.loadChapterFromFeature = loadChapterFromFeature;
     </script>
 </body>
 </html>

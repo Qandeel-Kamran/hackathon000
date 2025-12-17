@@ -745,6 +745,21 @@
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             loadChapters();
+
+            // Check if there's a chapter to load from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const chapterToLoad = urlParams.get('loadChapter');
+
+            if (chapterToLoad) {
+                // Remove the parameter from URL to keep it clean
+                const newUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, newUrl);
+
+                // Load the specified chapter after a short delay to ensure chapters are loaded
+                setTimeout(() => {
+                    loadChapter(chapterToLoad);
+                }, 500);
+            }
         });
 
         // Dynamic content loading functions
