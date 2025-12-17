@@ -239,13 +239,6 @@ app.get('/api/features', (req, res) => {
             title: "System Architecture",
             description: "Explore ROS 2 architecture diagrams and understand how different components interact.",
             details: "Dive deep into ROS 2 architecture with interactive diagrams showing how nodes, topics, services, and actions work together. Understand the communication patterns used in robotics applications and learn best practices for system design."
-        },
-        {
-            id: "music-learning",
-            icon: "fas fa-music",
-            title: "Music-Based Learning",
-            description: "Learn robot movement concepts through music and rhythm-based interactive examples.",
-            details: "Experience robotics through music! Control robot movements with musical beats, learn about timing and coordination through rhythm patterns, and understand how audio processing can drive physical systems. This unique approach makes learning about robot control engaging and intuitive."
         }
     ];
 
