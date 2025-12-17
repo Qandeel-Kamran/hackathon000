@@ -647,8 +647,8 @@
         }
 
         // Search functionality
-        document.getElementById('search-input').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
+        document.getElementById('search-input').addEventListener('input', async function(e) {
+            const query = e.target.value;
             const resultsContainer = document.getElementById('search-results');
 
             if (query.length < 2) {
@@ -656,26 +656,31 @@
                 return;
             }
 
-            // Simple search implementation
-            const matchingChapters = chapters.filter(chapter => {
-                return chapter.id.toLowerCase().includes(query) ||
-                       chapter.path.toLowerCase().includes(query);
-            });
+            try {
+                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
 
-            if (matchingChapters.length > 0) {
-                let resultsHtml = '<div class="list-group">';
-                matchingChapters.slice(0, 5).forEach(chapter => {
-                    resultsHtml += `
-                        <a href="#" class="list-group-item list-group-item-action"
-                           onclick="loadChapter('${chapter.id}'); document.getElementById('search-input').value=''; document.getElementById('search-results').innerHTML='';">
-                            Chapter ${chapter.id}
-                        </a>
-                    `;
-                });
-                resultsHtml += '</div>';
-                resultsContainer.innerHTML = resultsHtml;
-            } else {
-                resultsContainer.innerHTML = '<p class="text-muted">No results found</p>';
+                if (data.results && data.results.length > 0) {
+                    let resultsHtml = '<div class="list-group">';
+                    data.results.slice(0, 5).forEach(result => {
+                        resultsHtml += `
+                            <a href="#" class="list-group-item list-group-item-action"
+                               onclick="loadChapter('${result.chapter}'); document.getElementById('search-input').value=''; document.getElementById('search-results').innerHTML='';">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Chapter ${result.chapter}: ${result.title}</h6>
+                                </div>
+                                <small class="text-muted">${result.snippet}</small>
+                            </a>
+                        `;
+                    });
+                    resultsHtml += '</div>';
+                    resultsContainer.innerHTML = resultsHtml;
+                } else {
+                    resultsContainer.innerHTML = '<p class="text-muted">No results found</p>';
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                resultsContainer.innerHTML = '<p class="text-danger">Search error occurred</p>';
             }
         });
 

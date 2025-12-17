@@ -143,6 +143,65 @@ app.post('/api/chat', express.json(), (req, res) => {
     }, 500);
 });
 
+// API endpoint for search functionality
+app.get('/api/search', (req, res) => {
+    const query = req.query.q ? req.query.q.toLowerCase() : '';
+
+    if (!query) {
+        return res.json({ results: [] });
+    }
+
+    const fs = require('fs');
+    const path = require('path');
+
+    // Read all chapter directories
+    fs.readdir(path.join(__dirname, 'docs'), (err, files) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error reading chapters' });
+        }
+
+        const chapterDirs = files.filter(file =>
+            file.startsWith('chapter-') &&
+            fs.statSync(path.join(__dirname, 'docs', file)).isDirectory()
+        );
+
+        const results = [];
+
+        chapterDirs.forEach(chapterDir => {
+            const chapterPath = path.join(__dirname, 'docs', chapterDir);
+            const chapterFiles = fs.readdirSync(chapterPath);
+
+            chapterFiles.forEach(file => {
+                if (file.endsWith('.md')) {
+                    const filePath = path.join(chapterPath, file);
+                    const content = fs.readFileSync(filePath, 'utf8');
+                    const chapterNum = chapterDir.split('-')[1];
+
+                    // Search in content (case insensitive)
+                    if (content.toLowerCase().includes(query)) {
+                        // Extract a snippet around the search term
+                        const contentLower = content.toLowerCase();
+                        const queryIndex = contentLower.indexOf(query);
+                        const start = Math.max(0, queryIndex - 100);
+                        const end = Math.min(content.length, queryIndex + query.length + 100);
+                        const snippet = content.substring(start, end);
+
+                        results.push({
+                            chapter: chapterNum,
+                            title: file.replace('.md', '').replace(/-/g, ' '),
+                            path: `/chapter/${chapterNum}`,
+                            snippet: `...${snippet}...`,
+                            apiPath: `/api/chapter/${chapterNum}`
+                        });
+                    }
+                }
+            });
+        });
+
+        res.json({ results: results });
+    });
+});
+
 // API endpoint for dynamic features
 app.get('/api/features', (req, res) => {
     const features = [
