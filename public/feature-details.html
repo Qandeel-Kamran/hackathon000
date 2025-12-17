@@ -441,6 +441,14 @@
 
                 // Load feature-specific content including code examples
                 loadFeatureSpecificContent(featureId);
+
+                // Show the code examples section if it has content
+                setTimeout(() => {
+                    const codeExamplesSection = document.getElementById('code-examples-section');
+                    if (codeExamplesSection && codeExamplesSection.innerHTML.trim() !== '') {
+                        codeExamplesSection.style.display = 'block';
+                    }
+                }, 100); // Small delay to ensure content is loaded
             } else {
                 // Fallback if no feature ID is provided
                 document.getElementById('feature-content').innerHTML = `
@@ -785,7 +793,24 @@ bookmarks.addBookmark('Chapter 3', '3.2 Forward Kinematics', 'Important concept 
         }
 
         function showCodeExamples() {
-            alert('This feature would provide access to practical code examples demonstrating the concepts in action.');
+            // Get the URL parameters to identify the current feature
+            const urlParams = new URLSearchParams(window.location.search);
+            const featureId = urlParams.get('id');
+
+            // Load the feature-specific content if not already loaded
+            if (featureId) {
+                loadFeatureSpecificContent(featureId);
+
+                // Show the code examples section
+                const codeExamplesSection = document.getElementById('code-examples-section');
+                if (codeExamplesSection) {
+                    // Scroll to the code examples section
+                    codeExamplesSection.scrollIntoView({ behavior: 'smooth' });
+
+                    // Make sure it's visible
+                    codeExamplesSection.style.display = 'block';
+                }
+            }
         }
 
         function goToChapter() {
@@ -954,22 +979,23 @@ def example_function():
                     `;
                     break;
                 case 'examples':
-                    title = 'Real-world Examples';
+                    title = 'Code Examples';
                     content = `
                         <div class="highlight-box">
-                            <h5><i class="fas fa-lightbulb me-2"></i>Practical Examples</h5>
-                            <p>Real-world applications and use cases:</p>
+                            <h5><i class="fas fa-code me-2"></i>Code Examples</h5>
+                            <p>Practical implementation examples with source code:</p>
                             <ul>
-                                <li>Case studies from robotics research</li>
-                                <li>Industrial applications</li>
-                                <li>Research paper references</li>
-                                <li>Performance benchmarks</li>
+                                <li>Step-by-step implementation guides</li>
+                                <li>Source code in Python/C++</li>
+                                <li>ROS 2 integration examples</li>
+                                <li>Best practices for robotics applications</li>
                             </ul>
                         </div>
                         <div class="mt-3">
-                            <h6>Application Scenarios:</h6>
+                            <h6>View Code Examples:</h6>
                             <div class="interactive-element">
-                                <p>Example scenarios where this feature is commonly used in humanoid robotics and physical AI applications.</p>
+                                <p>Access practical code examples that demonstrate this feature in action.</p>
+                                <button class="btn btn-outline-success btn-sm" onclick="showCodeExamples()">View Code Examples</button>
                             </div>
                         </div>
                     `;
