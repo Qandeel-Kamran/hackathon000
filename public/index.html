@@ -513,8 +513,9 @@
                 chapterElement.addEventListener('click', () => loadChapter(chapter.id));
                 tocContainer.appendChild(chapterElement);
 
-                // Load chapter title
+                // Load chapter title and update completion status
                 loadChapterTitle(chapter.id, chapterElement);
+                updateChapterCompletionStatus(chapterNum, chapterElement);
             });
         }
 
@@ -528,8 +529,33 @@
                     const titleDiv = element.querySelector('.text-muted');
                     titleDiv.textContent = data.frontmatter.title;
                 }
+
+                // Update completion status after loading title
+                updateChapterCompletionStatus(parseInt(chapterId), element);
             } catch (error) {
                 console.error(`Error loading title for chapter ${chapterId}:`, error);
+            }
+        }
+
+        // Update chapter completion status in TOC
+        function updateChapterCompletionStatus(chapterId, element) {
+            const isCompleted = readingProgress.completedChapters.includes(parseInt(chapterId));
+            const chapterNumberDiv = element.querySelector('.chapter-number');
+
+            if (isCompleted) {
+                // Add checkmark and change color to indicate completion
+                if (chapterNumberDiv.textContent == chapterId || chapterNumberDiv.textContent.trim() === '') {
+                    chapterNumberDiv.innerHTML = `<i class="fas fa-check"></i>`;
+                    chapterNumberDiv.style.backgroundColor = '#28a745';
+                    chapterNumberDiv.title = `Chapter ${chapterId} - Completed`;
+                }
+            } else {
+                // Show chapter number if not completed
+                if (chapterNumberDiv.querySelector('.fa-check')) {
+                    chapterNumberDiv.textContent = chapterId;
+                    chapterNumberDiv.style.backgroundColor = 'var(--secondary-color)';
+                    chapterNumberDiv.title = `Chapter ${chapterId}`;
+                }
             }
         }
 
@@ -893,9 +919,19 @@
 
         // Mark a chapter as completed
         function markChapterCompleted(chapterId) {
+            chapterId = parseInt(chapterId); // Ensure chapterId is an integer
             if (!readingProgress.completedChapters.includes(chapterId)) {
                 readingProgress.completedChapters.push(chapterId);
                 saveReadingProgress();
+
+                // Update the specific chapter in TOC by looking for the chapter in the title
+                const tocItems = document.querySelectorAll('.toc-item');
+                tocItems.forEach(item => {
+                    const chapterTitleDiv = item.querySelector('.fw-bold');
+                    if (chapterTitleDiv && chapterTitleDiv.textContent.includes(`Chapter ${chapterId}`)) {
+                        updateChapterCompletionStatus(chapterId, item);
+                    }
+                });
             }
         }
 
@@ -930,9 +966,16 @@
         function initializeReadingProgress() {
             readingProgress.totalChapters = chapters.length;
             loadReadingProgress();
+
+            // Update all chapter completion statuses in TOC after loading progress
+            const tocItems = document.querySelectorAll('.toc-item');
+            tocItems.forEach((item, index) => {
+                const chapterId = parseInt(chapters[index].id);
+                updateChapterCompletionStatus(chapterId, item);
+            });
         }
 
-        // Update the loadChapter function to mark chapters as completed
+        // Update the loadChapter function - don't mark as completed when loaded
         async function loadChapter(chapterId) {
             try {
                 // Update active state in TOC
@@ -960,9 +1003,6 @@
 
                 currentChapter = chapterId;
 
-                // Mark this chapter as completed if not already
-                markChapterCompleted(parseInt(chapterId));
-
                 // Process and display the chapter content
                 displayChapter(data, chapterId);
             } catch (error) {
@@ -974,6 +1014,7 @@
         // Chapter completion and reminder functionality
         function completeChapter(chapterId) {
             markChapterCompleted(chapterId);
+            updateReadingProgressDisplay(); // Update the progress display immediately
             showNotification(`Chapter ${chapterId} marked as complete! Great job!`, 'success');
 
             // Navigate to next chapter if available
