@@ -334,90 +334,66 @@
             </div>
         </section>
 
-        <!-- Resources Section -->
-        <section id="resources" class="mb-5">
-            <h2 class="text-center mb-4">Learning Resources</h2>
-            <div class="row g-4" id="resources-container">
-                <!-- Resources will be loaded dynamically -->
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <h4>Loading...</h4>
-                        <p>Loading resource description...</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-video"></i>
-                        </div>
-                        <h4>Loading...</h4>
-                        <p>Loading resource description...</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <h4>Loading...</h4>
-                        <p>Loading resource description...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Chatboard Section -->
         <section id="chatboard" class="mb-5">
             <h2 class="text-center mb-4">Conversational AI Assistant</h2>
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0">
-                                <i class="fas fa-robot me-2"></i>AI Assistant for Physical AI & Robotics
-                            </h4>
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-primary text-white py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-robot fa-2x me-3"></i>
+                                <div>
+                                    <h4 class="mb-0">AI Assistant for Physical AI & Robotics</h4>
+                                    <small class="opacity-75">Ask me anything about robotics, AI, or textbook content</small>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body p-0">
                             <div class="row g-0">
                                 <div class="col-md-8">
-                                    <div id="chat-messages" class="p-3" style="height: 400px; overflow-y: auto; background-color: #f8f9fa;">
+                                    <div id="chat-messages" class="p-3" style="height: 450px; overflow-y: auto; background-color: #f8f9fa;">
                                         <div class="message ai-message mb-3">
                                             <div class="d-flex align-items-start">
                                                 <div class="avatar bg-primary rounded-circle p-2 me-3">
                                                     <i class="fas fa-robot text-white"></i>
                                                 </div>
-                                                <div class="bg-light rounded p-3">
-                                                    <small class="text-muted">AI Assistant</small>
-                                                    <p class="mb-0 mt-1">Hello! I'm your AI assistant for Physical AI and Humanoid Robotics education. How can I help you learn about robotics today?</p>
+                                                <div class="bg-light rounded p-3 flex-grow-1">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <small class="text-muted">AI Assistant</small>
+                                                        <small class="text-muted">Just now</small>
+                                                    </div>
+                                                    <p class="mb-0 mt-1">Hello! I'm your AI assistant for Physical AI and Humanoid Robotics education. I can help explain concepts from the textbook, provide examples, or answer questions about robotics. What would you like to learn about?</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 border-start">
-                                    <div class="p-3">
-                                        <h5><i class="fas fa-lightbulb me-2"></i>Quick Examples</h5>
-                                        <div class="d-grid gap-2 mb-3">
-                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('Explain forward kinematics')">Forward Kinematics</button>
-                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('How does PID control work in robotics?')">PID Control</button>
-                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('What is the difference between holonomic and non-holonomic robots?')">Robot Types</button>
-                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('Explain ZMP in humanoid robotics')">ZMP in Humanoids</button>
+                                <div class="col-md-4 border-start bg-light">
+                                    <div class="p-4">
+                                        <h5 class="mb-4"><i class="fas fa-bolt text-primary me-2"></i>Quick Start</h5>
+                                        <div class="d-grid gap-2 mb-4">
+                                            <button class="btn btn-outline-primary" onclick="sendQuickMessage('Explain forward kinematics')">Forward Kinematics</button>
+                                            <button class="btn btn-outline-primary" onclick="sendQuickMessage('How does PID control work in robotics?')">PID Control</button>
+                                            <button class="btn btn-outline-primary" onclick="sendQuickMessage('What is the difference between holonomic and non-holonomic robots?')">Robot Types</button>
+                                            <button class="btn btn-outline-primary" onclick="sendQuickMessage('Explain ZMP in humanoid robotics')">ZMP in Humanoids</button>
                                         </div>
-                                        <div class="alert alert-info">
-                                            <i class="fas fa-info-circle me-2"></i>
-                                            This AI assistant is connected to the educational content and can answer questions about any chapter or concept in the book.
+                                        <div class="bg-white rounded p-3 mb-3">
+                                            <h6 class="text-primary"><i class="fas fa-lightbulb me-2"></i>Pro Tip</h6>
+                                            <p class="mb-0 small">Try asking about specific textbook chapters, mathematical concepts, or implementation details. I can help explain complex topics in simple terms!</p>
+                                        </div>
+                                        <div class="bg-info bg-opacity-10 rounded p-3">
+                                            <h6 class="text-info"><i class="fas fa-sync-alt me-2"></i>Real-time Learning</h6>
+                                            <p class="mb-0 small">I'm connected to the textbook content and can provide examples, code snippets, and detailed explanations for any topic in Physical AI & Robotics.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer bg-light">
+                            <div class="card-footer bg-white py-3">
                                 <div class="input-group">
-                                    <input type="text" id="message-input" class="form-control" placeholder="Ask a question about Physical AI, robotics, or any chapter content..." onkeypress="handleMessageKeyPress(event)">
-                                    <button class="btn btn-primary" type="button" onclick="sendMessage()">
-                                        <i class="fas fa-paper-plane me-1"></i>Send
+                                    <input type="text" id="message-input" class="form-control form-control-lg border-0 bg-light" placeholder="Ask a question about Physical AI, robotics, or any chapter content..." onkeypress="handleMessageKeyPress(event)">
+                                    <button class="btn btn-primary btn-lg px-4" type="button" onclick="sendMessage()">
+                                        <i class="fas fa-paper-plane me-2"></i>Send
                                     </button>
                                 </div>
                             </div>
@@ -863,9 +839,9 @@
                 chapters = data.chapters;
                 renderTableOfContents();
 
-                // Load dynamic features and resources after chapters are loaded
+                // Load dynamic features after chapters are loaded
                 await loadFeatures();
-                await loadResources();
+                // Note: Resources section has been removed
             } catch (error) {
                 console.error('Error loading chapters:', error);
                 document.getElementById('toc-container').innerHTML = '<p class="text-danger">Error loading chapters</p>';

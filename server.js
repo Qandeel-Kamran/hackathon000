@@ -193,38 +193,38 @@ app.get('/api/features', (req, res) => {
     res.json({ features });
 });
 
-// API endpoint for learning resources
-app.get('/api/resources', (req, res) => {
-    const resources = [
-        {
-            icon: "fas fa-book",
-            title: "Textbook Chapters",
-            description: "Complete textbook content with examples, exercises, and solutions."
-        },
-        {
-            icon: "fas fa-code",
-            title: "Code Repository",
-            description: "Complete code examples and exercises available for download and experimentation."
-        },
-        {
-            icon: "fas fa-chalkboard-teacher",
-            title: "Lecture Slides",
-            description: "Presentation slides for each topic to support classroom learning."
-        },
-        {
-            icon: "fas fa-tasks",
-            title: "Exercise Sets",
-            description: "Practice problems with solutions to reinforce learning concepts."
-        },
-        {
-            icon: "fas fa-graduation-cap",
-            title: "Certification Path",
-            description: "Structured learning paths with assessments and certificates of completion."
-        }
-    ];
+// API endpoint for learning resources (removed)
+// app.get('/api/resources', (req, res) => {
+//     const resources = [
+//         {
+//             icon: "fas fa-book",
+//             title: "Textbook Chapters",
+//             description: "Complete textbook content with examples, exercises, and solutions."
+//         },
+//         {
+//             icon: "fas fa-code",
+//             title: "Code Repository",
+//             description: "Complete code examples and exercises available for download and experimentation."
+//         },
+//         {
+//             icon: "fas fa-chalkboard-teacher",
+//             title: "Lecture Slides",
+//             description: "Presentation slides for each topic to support classroom learning."
+//         },
+//         {
+//             icon: "fas fa-tasks",
+//             title: "Exercise Sets",
+//             description: "Practice problems with solutions to reinforce learning concepts."
+//         },
+//         {
+//             icon: "fas fa-graduation-cap",
+//             title: "Certification Path",
+//             description: "Structured learning paths with assessments and certificates of completion."
+//         }
+//     ];
 
-    res.json({ resources });
-});
+//     res.json({ resources });
+// });
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
