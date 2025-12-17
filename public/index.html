@@ -150,6 +150,23 @@
             font-weight: 500;
         }
 
+        .chapter-nav-item button {
+            transition: all 0.3s ease;
+            border-radius: 20px !important;
+            margin: 2px;
+        }
+
+        .chapter-nav-item button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .chapter-nav-item button.btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)) !important;
+            border: none !important;
+            color: white !important;
+        }
+
         .code-block {
             background-color: #f4f4f4;
             border-left: 4px solid var(--secondary-color);
@@ -261,6 +278,22 @@
                 <a href="#features" class="btn btn-outline-light btn-lg">
                     <i class="fas fa-star me-2"></i>Explore Features
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Navigation Bar -->
+    <div class="container-fluid bg-light py-2 mb-4">
+        <div class="container">
+            <div class="d-flex overflow-x-auto pb-2" style="white-space: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;">
+                <div class="d-flex" id="chapter-nav-container">
+                    <!-- Chapter navigation items will be loaded here -->
+                    <div class="text-center mx-1">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -420,11 +453,31 @@
                 const response = await fetch('/api/chapters');
                 const data = await response.json();
                 chapters = data.chapters;
+                renderChapterNavBar();
                 renderTableOfContents();
             } catch (error) {
                 console.error('Error loading chapters:', error);
                 document.getElementById('toc-container').innerHTML = '<p class="text-danger">Error loading chapters</p>';
+                document.getElementById('chapter-nav-container').innerHTML = '<p class="text-danger">Error loading chapters</p>';
             }
+        }
+
+        // Render chapter navigation bar
+        function renderChapterNavBar() {
+            const navContainer = document.getElementById('chapter-nav-container');
+            navContainer.innerHTML = '';
+
+            chapters.forEach((chapter, index) => {
+                const chapterNum = parseInt(chapter.id);
+                const chapterElement = document.createElement('div');
+                chapterElement.className = 'chapter-nav-item mx-1';
+                chapterElement.innerHTML = `
+                    <button class="btn btn-outline-primary btn-sm" onclick="loadChapter(${chapterNum})" style="min-width: 60px;">
+                        Ch ${chapterNum}
+                    </button>
+                `;
+                navContainer.appendChild(chapterElement);
+            });
         }
 
         // Render table of contents
@@ -475,7 +528,21 @@
                 document.querySelectorAll('.toc-item').forEach(item => {
                     item.classList.remove('active');
                 });
-                event.currentTarget.classList.add('active');
+
+                // Update active state in chapter nav bar
+                document.querySelectorAll('.chapter-nav-item button').forEach(button => {
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-outline-primary');
+                });
+
+                // Find and highlight the current chapter button
+                const chapterButtons = document.querySelectorAll('.chapter-nav-item button');
+                chapterButtons.forEach(button => {
+                    if (button.textContent.includes('Ch ' + chapterId)) {
+                        button.classList.remove('btn-outline-primary');
+                        button.classList.add('btn-primary');
+                    }
+                });
 
                 const response = await fetch(`/api/chapter/${chapterId}`);
                 const data = await response.json();
@@ -649,26 +716,12 @@
             }
         }
 
-        // Function to show feature details in a modal
+        // Function to navigate to feature details page
         function showFeatureDetails(id, title, details, icon) {
-            // Update modal content
-            document.getElementById('featureModalLabel').innerHTML = `
-                <i class="${icon} me-2"></i>${title}
-            `;
-            document.getElementById('featureModalBody').innerHTML = `
-                <div class="feature-detail-content">
-                    <p class="lead">${details}</p>
-                    <div class="alert alert-info">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Try it out:</strong> Look for this feature throughout the textbook content to see it in action!
-                    </div>
-                </div>
-            `;
-
-            // Show the modal
-            const modalElement = document.getElementById('featureModal');
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
+            // Encode the details to pass in URL
+            const encodedDetails = encodeURIComponent(details);
+            const url = `feature-details.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}&icon=${encodeURIComponent(icon)}&details=${encodedDetails}`;
+            window.location.href = url;
         }
 
         async function loadResources() {
@@ -796,8 +849,8 @@
 
     <!-- Floating Chat Button -->
     <div class="floating-chat-btn" style="position: fixed; bottom: 30px; right: 30px; z-index: 1000;">
-        <button id="chat-toggle-btn" class="btn btn-primary btn-lg rounded-circle shadow" style="width: 60px; height: 60px; border-radius: 50% !important;" onclick="toggleChat()">
-            <i class="fas fa-comments fa-2x"></i>
+        <button id="chat-toggle-btn" class="btn btn-primary btn-lg rounded-circle shadow" style="width: 70px; height: 70px; border-radius: 50% !important; background: linear-gradient(135deg, #3498db, #2c3e50); border: none; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);" onclick="toggleChat()">
+            <i class="fas fa-robot fa-2x" style="margin-top: 2px;"></i>
         </button>
     </div>
 
@@ -807,9 +860,9 @@
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-comments fa-2x me-3"></i>
+                        <i class="fas fa-robot fa-2x me-3"></i>
                         <div>
-                            <h5 class="modal-title mb-0" id="chatModalLabel">Book Assistant</h5>
+                            <h5 class="modal-title mb-0" id="chatModalLabel">Robotics Buddy</h5>
                             <small class="opacity-75">Ask me anything about robotics!</small>
                         </div>
                     </div>
