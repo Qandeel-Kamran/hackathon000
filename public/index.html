@@ -242,7 +242,7 @@
                         <a class="nav-link" href="#features"><i class="fas fa-star me-1"></i> Features</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about" onclick="showAboutInfo()"><i class="fas fa-info-circle me-1"></i> About</a>
+                        <a class="nav-link" href="about.html"><i class="fas fa-info-circle me-1"></i> About</a>
                     </li>
                 </ul>
             </div>
@@ -785,24 +785,19 @@
             }
         }
 
-        // Function to show about information
-        function showAboutInfo() {
-            alert("Physical AI & Humanoid Robotics Book\n\nThis comprehensive guide covers the fundamentals of embodied intelligence, robot control systems, perception, and humanoid robotics. The book combines theoretical concepts with practical examples and interactive learning tools to help students understand how physical systems can exhibit intelligent behavior.");
-        }
-
+        
         // Make functions available globally
         window.loadChapter = loadChapter;
         window.sendMessage = sendMessage;
         window.sendQuickMessage = sendQuickMessage;
         window.handleMessageKeyPress = handleMessageKeyPress;
         window.showFeatureDetails = showFeatureDetails;
-        window.showAboutInfo = showAboutInfo;
     </script>
 
     <!-- Floating Chat Button -->
     <div class="floating-chat-btn" style="position: fixed; bottom: 30px; right: 30px; z-index: 1000;">
         <button id="chat-toggle-btn" class="btn btn-primary btn-lg rounded-circle shadow" style="width: 60px; height: 60px; border-radius: 50% !important;" onclick="toggleChat()">
-            <i class="fas fa-robot fa-2x"></i>
+            <i class="fas fa-comments fa-2x"></i>
         </button>
     </div>
 
@@ -812,9 +807,9 @@
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-robot fa-2x me-3"></i>
+                        <i class="fas fa-comments fa-2x me-3"></i>
                         <div>
-                            <h5 class="modal-title mb-0" id="chatModalLabel">Robotics Buddy</h5>
+                            <h5 class="modal-title mb-0" id="chatModalLabel">Book Assistant</h5>
                             <small class="opacity-75">Ask me anything about robotics!</small>
                         </div>
                     </div>
@@ -827,14 +822,14 @@
                                 <div class="message ai-message mb-3">
                                     <div class="d-flex align-items-start">
                                         <div class="avatar bg-primary rounded-circle p-2 me-3">
-                                            <i class="fas fa-robot text-white"></i>
+                                            <i class="fas fa-comments text-white"></i>
                                         </div>
                                         <div class="bg-light rounded p-3 flex-grow-1">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <small class="text-muted">Robotics Buddy</small>
+                                                <small class="text-muted">Book Assistant</small>
                                                 <small class="text-muted">Just now</small>
                                             </div>
-                                            <p class="mb-0 mt-1">Hey there! 👋 I'm your Robotics Buddy! What's on your mind about robotics, AI, or Physical Intelligence? Just ask me anything - I'm here to help!</p>
+                                            <p class="mb-0 mt-1">Hello! I'm your Book Assistant for Physical AI and Humanoid Robotics. Feel free to ask me any questions about the content, concepts, or applications in robotics and AI.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -842,15 +837,15 @@
                         </div>
                         <div class="col-4 border-start bg-light">
                             <div class="p-3">
-                                <h6 class="mb-3 text-primary"><i class="fas fa-bolt me-2"></i>Quick Questions</h6>
+                                <h6 class="mb-3 text-primary"><i class="fas fa-lightbulb me-2"></i>Quick Questions</h6>
                                 <div class="d-grid gap-2 mb-3">
-                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('What is inverse kinematics?')">Inverse Kinematics</button>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('Explain PID control')">PID Control</button>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('How do robots maintain balance?')">Balance Control</button>
-                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('What are the main types of robot actuators?')">Robot Actuators</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('Explain forward kinematics')">Forward Kinematics</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('How does PID control work in robotics?')">PID Control</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('What is the difference between holonomic and non-holonomic robots?')">Robot Types</button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessageModal('Explain ZMP in humanoid robotics')">ZMP in Humanoids</button>
                                 </div>
                                 <div class="bg-white rounded p-2 mb-2">
-                                    <small class="text-muted">💡 Pro tip: Ask about specific textbook chapters!</small>
+                                    <small class="text-muted">💡 Ask about textbook chapters!</small>
                                 </div>
                             </div>
                         </div>
@@ -858,7 +853,7 @@
                 </div>
                 <div class="modal-footer bg-light">
                     <div class="input-group">
-                        <input type="text" id="message-input-modal" class="form-control" placeholder="Ask a question..." onkeypress="handleMessageKeyPressModal(event)">
+                        <input type="text" id="message-input-modal" class="form-control" placeholder="Ask a question about Physical AI, robotics, or any chapter content..." onkeypress="handleMessageKeyPressModal(event)">
                         <button class="btn btn-primary" type="button" onclick="sendMessageModal()">
                             <i class="fas fa-paper-plane me-1"></i> Send
                         </button>
