@@ -441,14 +441,6 @@
 
                 // Load feature-specific content including code examples
                 loadFeatureSpecificContent(featureId);
-
-                // Show the code examples section if it has content
-                setTimeout(() => {
-                    const codeExamplesSection = document.getElementById('code-examples-section');
-                    if (codeExamplesSection && codeExamplesSection.innerHTML.trim() !== '') {
-                        codeExamplesSection.style.display = 'block';
-                    }
-                }, 100); // Small delay to ensure content is loaded
             } else {
                 // Fallback if no feature ID is provided
                 document.getElementById('feature-content').innerHTML = `
@@ -801,15 +793,18 @@ bookmarks.addBookmark('Chapter 3', '3.2 Forward Kinematics', 'Important concept 
             if (featureId) {
                 loadFeatureSpecificContent(featureId);
 
-                // Show the code examples section
-                const codeExamplesSection = document.getElementById('code-examples-section');
-                if (codeExamplesSection) {
-                    // Scroll to the code examples section
-                    codeExamplesSection.scrollIntoView({ behavior: 'smooth' });
+                // Small delay to ensure content is loaded, then show the section
+                setTimeout(() => {
+                    // Show the code examples section
+                    const codeExamplesSection = document.getElementById('code-examples-section');
+                    if (codeExamplesSection) {
+                        // Scroll to the code examples section
+                        codeExamplesSection.scrollIntoView({ behavior: 'smooth' });
 
-                    // Make sure it's visible
-                    codeExamplesSection.style.display = 'block';
-                }
+                        // Make sure it's visible
+                        codeExamplesSection.style.display = 'block';
+                    }
+                }, 100); // Small delay to ensure content is loaded
             }
         }
 
