@@ -1,0 +1,16 @@
+# Action for long-running trajectory execution
+trajectory_msgs/JointTrajectory trajectory
+
+---
+bool success
+string error_message
+
+---
+builtin_interfaces/Time start_time
+builtin_interfaces/Time current_time
+builtin_interfaces/Time estimated_end_time
+float64 progress  # 0.0 to 1.0
+string current_state  # executing, paused, error
+string[] joint_names
+float64[] current_positions
+float64[] target_positions

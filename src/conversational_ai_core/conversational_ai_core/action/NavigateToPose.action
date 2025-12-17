@@ -1,0 +1,17 @@
+# Action for navigation tasks with feedback
+geometry_msgs/PoseStamped target_pose
+string frame_id
+float64[] tolerance
+
+---
+bool success
+string error_message
+geometry_msgs/PoseStamped final_pose
+
+---
+builtin_interfaces/Time start_time
+builtin_interfaces/Time current_time
+float64 distance_remaining
+float64 progress  # 0.0 to 1.0
+string status  # navigating, blocked, goal_reached
+geometry_msgs/PoseStamped current_pose

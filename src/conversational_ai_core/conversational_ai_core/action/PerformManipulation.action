@@ -1,0 +1,19 @@
+# Action for complex manipulation sequences
+string manipulation_type  # pick, place, grasp, release
+geometry_msgs/Pose target_pose
+string[] joint_trajectory
+string object_id
+string end_effector
+
+---
+bool success
+string error_message
+string result_description
+
+---
+builtin_interfaces/Time start_time
+builtin_interfaces/Time current_time
+float64 progress  # 0.0 to 1.0
+string current_phase  # approaching, grasping, lifting, moving, placing
+bool is_object_grasped
+geometry_msgs/Pose current_pose

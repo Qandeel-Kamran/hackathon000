@@ -1,0 +1,29 @@
+{
+  "name": "conversational-ai-chatboard",
+  "version": "1.0.0",
+  "description": "Web-based chat interface for conversational AI system",
+  "main": "chat_interface.py",
+  "scripts": {
+    "start": "python chat_interface.py",
+    "dev": "python chat_interface.py"
+  },
+  "keywords": [
+    "chat",
+    "ai",
+    "robotics",
+    "conversational-ai",
+    "humanoid-robotics"
+  ],
+  "author": "Conversational AI System",
+  "license": "MIT",
+  "dependencies": {
+    "flask": "^2.0.0",
+    "websockets": "^10.0.0",
+    "asyncio": "^3.4.3"
+  },
+  "pythonDependencies": {
+    "flask": "^2.0.0",
+    "websockets": "^10.0.0",
+    "rclpy": "^3.0.0"
+  }
+}

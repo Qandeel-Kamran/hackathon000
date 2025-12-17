@@ -1,0 +1,12 @@
+# Service to retrieve robot configuration and capabilities
+---
+string robot_id
+string model_name
+string[] joint_names
+string[] sensor_types
+string[] available_behaviors
+string[] capabilities
+float64[] joint_limits
+float64[] velocity_limits
+bool is_simulated
+string description

@@ -1,0 +1,11 @@
+# Service to retrieve educational content based on context
+string topic
+string difficulty_level  # basic, intermediate, advanced
+string user_level
+string[] keywords
+---
+bool success
+string error_message
+LessonContent[] content
+string[] related_topics
+string[] suggested_next_topics

@@ -1,99 +1,79 @@
-# Physical AI & Humanoid Robotics Documentation
+# Conversational AI for Humanoid Robotics and Physical AI Education
 
-This repository contains the complete documentation for the book "Physical AI & Humanoid Robotics" published as a Docusaurus site.
+A conversational AI system designed to facilitate education in humanoid robotics and Physical AI, integrating with ROS 2, Gazebo simulation, Isaac Sim, and textbook-based learning content. The system provides an interactive interface for students and researchers to learn about and experiment with humanoid robot control, perception, and behavior.
 
-## Installation
+## Project Overview
 
-To install and run the documentation site locally:
+This educational platform combines:
+- ROS 2 architecture for robot communication
+- Gazebo simulation for robot modeling
+- Isaac Sim for perception pipeline
+- Textbook-based learning content
+- Music-based interactive examples for teaching robot movements
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd physical-ai-documentation
+## Setup and Installation
 
-# Install dependencies
-npm install
+### Prerequisites
+- ROS 2 Humble Hawksbill or later
+- Gazebo simulation environment
+- Isaac Sim (optional)
+- Python 3.8 or higher
+- Appropriate humanoid robot models for simulation
 
-# Or if using yarn
-yarn install
-```
+### Installation
 
-## Development
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd conversational-ai-humanoid-robotics
+   ```
 
-To start a local development server with hot reloading:
+2. Install dependencies:
+   ```bash
+   # Install ROS 2 dependencies
+   rosdep install --from-paths src --ignore-src -r -y
+   ```
 
-```bash
-npm run start
-# or
-yarn start
-```
+3. Build the workspace:
+   ```bash
+   colcon build
+   ```
 
-This will start the development server at `http://localhost:3000` with live reload functionality.
+4. Source the workspace:
+   ```bash
+   source install/setup.bash
+   ```
 
-## Build
+## Usage
 
-To build the static site for production:
+### Running the System
 
-```bash
-npm run build
-# or
-yarn build
-```
+1. Launch the main system:
+   ```bash
+   ros2 launch conversational_ai_core ai_system.launch.py
+   ```
 
-The build command creates an optimized static site in the `build/` directory that can be deployed to any static hosting service.
+2. Interact with the conversational AI through the command line interface.
 
-## Recommended Plugins
+### Educational Scenarios
 
-The documentation site uses several recommended plugins for enhanced functionality:
+The system includes various educational scenarios that demonstrate robotics concepts through simulation and interactive examples.
 
-- `@docusaurus/plugin-content-docs` - For documentation site functionality
-- `@docusaurus/plugin-content-blog` - For blog functionality (if needed)
-- `@docusaurus/plugin-google-gtag` - For Google Analytics
-- `@docusaurus/plugin-sitemap` - For automatic sitemap generation
-- `@docusaurus/theme-search-algolia` - For search functionality
-- `@docusaurus/plugin-client-redirects` - For URL redirects
-- `docusaurus-plugin-matomo` - For privacy-focused analytics
-- `@docusaurus/plugin-content-pages` - For custom pages
+## Architecture
 
-Additional useful plugins:
-- `docusaurus-plugin-image-zoom` - For image zooming functionality
-- `@docusaurus/theme-mermaid` - For Mermaid diagram rendering
-- `docusaurus-plugin-math` - For mathematical notation support
+The system is organized into several ROS 2 packages:
 
-## Deploy to Vercel
-
-To deploy your Docusaurus site to Vercel:
-
-1. Push your code to a Git repository (GitHub, GitLab, or Bitbucket)
-2. Go to [Vercel](https://vercel.com) and create a new project
-3. Import your repository
-4. Set the build command to `npm run build` (or `yarn build`)
-5. Set the output directory to `build`
-6. Add any required environment variables
-7. Deploy!
-
-Vercel will automatically rebuild and deploy your site on every push to the main branch.
-
-## Environment Variables
-
-The following environment variables can be configured:
-
-- `ALGOLIA_API_KEY` - For Algolia search functionality
-- `ALGOLIA_APP_ID` - For Algolia search functionality
-- `ALGOLIA_INDEX_NAME` - For Algolia search functionality
-- `MATOMO_URL` - For Matomo analytics
-- `MATOMO_SITE_ID` - For Matomo analytics
+- `conversational_ai_core`: Main conversational interface and NLP functionality
+- `robot_interfaces`: ROS 2 interfaces for different robot models
+- `simulation_interfaces`: Gazebo and Isaac Sim integration
+- `educational_content`: Textbook content management
+- `music_integration`: Music-based movement system
+- `utils`: Common utilities and helper functions
 
 ## Contributing
 
-To contribute to the documentation:
-
-1. Fork the repository
-2. Create a new branch for your changes
-3. Make your changes to the Markdown files in the `docs/` directory
-4. Test your changes locally with `npm run start`
-5. Submit a pull request
+Please read the contributing guidelines for more information on how to contribute to this project.
 
 ## License
 
-This documentation is licensed under [LICENSE TYPE] - see the LICENSE file for details.
+This project is licensed under the Apache 2.0 License - see the LICENSE file for details.
