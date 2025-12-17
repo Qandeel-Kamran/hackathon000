@@ -19,6 +19,11 @@ app.get('/chapter/:id', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'chapter.html'));
 });
 
+// Route for feature details
+app.get('/feature/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'feature-details.html'));
+});
+
 // API endpoint to get chapter content
 app.get('/api/chapter/:id', (req, res) => {
     const chapterId = req.params.id;
