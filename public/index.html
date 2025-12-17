@@ -314,6 +314,24 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Feature Details Modal -->
+            <div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="featureModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="featureModalLabel">Feature Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="featureModalBody">
+                            <!-- Feature details will be loaded here -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Resources Section -->
@@ -703,7 +721,7 @@
                     const colDiv = document.createElement('div');
                     colDiv.className = 'col-md-4';
                     colDiv.innerHTML = `
-                        <div class="feature-card">
+                        <div class="feature-card" onclick="showFeatureDetails('${feature.id}', '${feature.title}', '${feature.details.replace(/'/g, "\\'")}', '${feature.icon}')">
                             <div class="feature-icon">
                                 <i class="${feature.icon}"></i>
                             </div>
@@ -716,6 +734,28 @@
             } catch (error) {
                 console.error('Error loading features:', error);
             }
+        }
+
+        // Function to show feature details in a modal
+        function showFeatureDetails(id, title, details, icon) {
+            // Update modal content
+            document.getElementById('featureModalLabel').innerHTML = `
+                <i class="${icon} me-2"></i>${title}
+            `;
+            document.getElementById('featureModalBody').innerHTML = `
+                <div class="feature-detail-content">
+                    <p class="lead">${details}</p>
+                    <div class="alert alert-info">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Try it out:</strong> Look for this feature throughout the textbook content to see it in action!
+                    </div>
+                </div>
+            `;
+
+            // Show the modal
+            const modalElement = document.getElementById('featureModal');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
         }
 
         async function loadResources() {
@@ -837,6 +877,7 @@
         window.sendMessage = sendMessage;
         window.sendQuickMessage = sendQuickMessage;
         window.handleMessageKeyPress = handleMessageKeyPress;
+        window.showFeatureDetails = showFeatureDetails;
     </script>
 </body>
 </html>

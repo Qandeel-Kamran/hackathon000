@@ -147,34 +147,46 @@ app.post('/api/chat', express.json(), (req, res) => {
 app.get('/api/features', (req, res) => {
     const features = [
         {
+            id: "interactive-code",
             icon: "fas fa-code",
             title: "Interactive Code Examples",
-            description: "Run and modify Python and C++ code examples directly in your browser with real-time feedback."
+            description: "Run and modify Python and C++ code examples directly in your browser with real-time feedback.",
+            details: "This feature allows students to experiment with real robotics code examples without needing to set up complex development environments. You can modify parameters, see immediate results, and understand how code changes affect robot behavior. Examples include forward kinematics, PID controllers, path planning algorithms, and more."
         },
         {
+            id: "smart-search",
             icon: "fas fa-search",
             title: "Smart Content Search",
-            description: "Search across all chapters to find specific topics, concepts, or code examples instantly."
+            description: "Search across all chapters to find specific topics, concepts, or code examples instantly.",
+            details: "Quickly locate information across the entire textbook using our intelligent search system. Search for concepts like 'inverse kinematics', 'SLAM', 'ZMP', or 'trajectory planning' and find relevant sections, code examples, and exercises instantly."
         },
         {
+            id: "smart-bookmarks",
             icon: "fas fa-bookmark",
             title: "Smart Bookmarks",
-            description: "Save your favorite sections and return to them later with personalized notes and highlights."
+            description: "Save your favorite sections and return to them later with personalized notes and highlights.",
+            details: "Bookmark important sections, add your own notes and annotations, and create a personalized learning path. Your bookmarks sync across sessions, so you can continue learning where you left off."
         },
         {
+            id: "math-visualization",
             icon: "fas fa-calculator",
             title: "Mathematical Visualization",
-            description: "Interactive tools to visualize complex mathematical concepts in robotics and AI."
+            description: "Interactive tools to visualize complex mathematical concepts in robotics and AI.",
+            details: "Understand complex mathematical concepts through interactive visualizations. See how rotation matrices work, visualize Jacobian transformations, explore coordinate transformations, and understand the geometry behind robot movements."
         },
         {
+            id: "system-architecture",
             icon: "fas fa-project-diagram",
             title: "System Architecture",
-            description: "Explore ROS 2 architecture diagrams and understand how different components interact."
+            description: "Explore ROS 2 architecture diagrams and understand how different components interact.",
+            details: "Dive deep into ROS 2 architecture with interactive diagrams showing how nodes, topics, services, and actions work together. Understand the communication patterns used in robotics applications and learn best practices for system design."
         },
         {
+            id: "music-learning",
             icon: "fas fa-music",
             title: "Music-Based Learning",
-            description: "Learn robot movement concepts through music and rhythm-based interactive examples."
+            description: "Learn robot movement concepts through music and rhythm-based interactive examples.",
+            details: "Experience robotics through music! Control robot movements with musical beats, learn about timing and coordination through rhythm patterns, and understand how audio processing can drive physical systems. This unique approach makes learning about robot control engaging and intuitive."
         }
     ];
 
