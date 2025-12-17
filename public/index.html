@@ -282,29 +282,6 @@
         </div>
     </div>
 
-    <!-- Chapter Navigation Bar -->
-    <div class="container-fluid bg-light py-2 mb-4">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h5 class="mb-0">Chapters</h5>
-                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#chapter-nav-collapse" aria-expanded="true" aria-controls="chapter-nav-collapse">
-                    <i class="fas fa-chevron-up"></i> <span class="toggle-text">Hide</span>
-                </button>
-            </div>
-            <div class="collapse show" id="chapter-nav-collapse">
-                <div class="d-flex overflow-x-auto pb-2" style="white-space: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;">
-                    <div class="d-flex" id="chapter-nav-container">
-                        <!-- Chapter navigation items will be loaded here -->
-                        <div class="text-center mx-1">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="container">
@@ -1007,6 +984,9 @@
             readingProgress.totalChapters = chapters.length;
             loadReadingProgress();
 
+            // Update the reading progress display after loading progress
+            updateReadingProgressDisplay();
+
             // Update all chapter completion statuses in TOC after loading progress
             const tocItems = document.querySelectorAll('.toc-item');
             tocItems.forEach((item, index) => {
@@ -1316,26 +1296,6 @@
         window.setChapterReadingProgress = setChapterReadingProgress;
         window.setupReadingProgressTracking = setupReadingProgressTracking;
 
-        // Add event listener for chapter navigation collapse toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up the toggle button for chapter navigation
-            const collapseElement = document.getElementById('chapter-nav-collapse');
-            collapseElement.addEventListener('hide.bs.collapse', function () {
-                const toggleBtn = document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#chapter-nav-collapse"]');
-                const icon = toggleBtn.querySelector('i');
-                const textSpan = toggleBtn.querySelector('.toggle-text');
-                icon.className = 'fas fa-chevron-down';
-                textSpan.textContent = 'Show';
-            });
-
-            collapseElement.addEventListener('show.bs.collapse', function () {
-                const toggleBtn = document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#chapter-nav-collapse"]');
-                const icon = toggleBtn.querySelector('i');
-                const textSpan = toggleBtn.querySelector('.toggle-text');
-                icon.className = 'fas fa-chevron-up';
-                textSpan.textContent = 'Hide';
-            });
-        });
     </script>
 
     <!-- Floating Chat Button -->
