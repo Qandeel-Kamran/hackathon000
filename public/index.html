@@ -284,14 +284,15 @@
         <!-- Features Section -->
         <section id="features" class="mb-5">
             <h2 class="text-center mb-4">Interactive Learning Features</h2>
-            <div class="row g-4">
+            <div class="row g-4" id="features-container">
+                <!-- Features will be loaded dynamically -->
                 <div class="col-md-4">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-code"></i>
                         </div>
-                        <h4>Code Examples</h4>
-                        <p>Interactive code snippets in Python and C++ with syntax highlighting and copy functionality.</p>
+                        <h4>Loading...</h4>
+                        <p>Loading feature description...</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -299,8 +300,8 @@
                         <div class="feature-icon">
                             <i class="fas fa-search"></i>
                         </div>
-                        <h4>Smart Search</h4>
-                        <p>Search across all chapters to find specific topics, concepts, or code examples.</p>
+                        <h4>Loading...</h4>
+                        <p>Loading feature description...</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -308,8 +309,101 @@
                         <div class="feature-icon">
                             <i class="fas fa-bookmark"></i>
                         </div>
-                        <h4>Bookmark System</h4>
-                        <p>Save your favorite sections and return to them later for quick reference.</p>
+                        <h4>Loading...</h4>
+                        <p>Loading feature description...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="mb-5">
+            <h2 class="text-center mb-4">Learning Resources</h2>
+            <div class="row g-4" id="resources-container">
+                <!-- Resources will be loaded dynamically -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h4>Loading...</h4>
+                        <p>Loading resource description...</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h4>Loading...</h4>
+                        <p>Loading resource description...</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h4>Loading...</h4>
+                        <p>Loading resource description...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chatboard Section -->
+        <section id="chatboard" class="mb-5">
+            <h2 class="text-center mb-4">Conversational AI Assistant</h2>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">
+                                <i class="fas fa-robot me-2"></i>AI Assistant for Physical AI & Robotics
+                            </h4>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="row g-0">
+                                <div class="col-md-8">
+                                    <div id="chat-messages" class="p-3" style="height: 400px; overflow-y: auto; background-color: #f8f9fa;">
+                                        <div class="message ai-message mb-3">
+                                            <div class="d-flex align-items-start">
+                                                <div class="avatar bg-primary rounded-circle p-2 me-3">
+                                                    <i class="fas fa-robot text-white"></i>
+                                                </div>
+                                                <div class="bg-light rounded p-3">
+                                                    <small class="text-muted">AI Assistant</small>
+                                                    <p class="mb-0 mt-1">Hello! I'm your AI assistant for Physical AI and Humanoid Robotics education. How can I help you learn about robotics today?</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 border-start">
+                                    <div class="p-3">
+                                        <h5><i class="fas fa-lightbulb me-2"></i>Quick Examples</h5>
+                                        <div class="d-grid gap-2 mb-3">
+                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('Explain forward kinematics')">Forward Kinematics</button>
+                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('How does PID control work in robotics?')">PID Control</button>
+                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('What is the difference between holonomic and non-holonomic robots?')">Robot Types</button>
+                                            <button class="btn btn-outline-primary btn-sm" onclick="sendQuickMessage('Explain ZMP in humanoid robotics')">ZMP in Humanoids</button>
+                                        </div>
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            This AI assistant is connected to the educational content and can answer questions about any chapter or concept in the book.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-light">
+                                <div class="input-group">
+                                    <input type="text" id="message-input" class="form-control" placeholder="Ask a question about Physical AI, robotics, or any chapter content..." onkeypress="handleMessageKeyPress(event)">
+                                    <button class="btn btn-primary" type="button" onclick="sendMessage()">
+                                        <i class="fas fa-paper-plane me-1"></i>Send
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -596,8 +690,153 @@
             loadChapters();
         });
 
-        // Make loadChapter available globally for navigation
+        // Dynamic content loading functions
+        async function loadFeatures() {
+            try {
+                const response = await fetch('/api/features');
+                const data = await response.json();
+
+                const container = document.getElementById('features-container');
+                container.innerHTML = '';
+
+                data.features.forEach(feature => {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'col-md-4';
+                    colDiv.innerHTML = `
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="${feature.icon}"></i>
+                            </div>
+                            <h4>${feature.title}</h4>
+                            <p>${feature.description}</p>
+                        </div>
+                    `;
+                    container.appendChild(colDiv);
+                });
+            } catch (error) {
+                console.error('Error loading features:', error);
+            }
+        }
+
+        async function loadResources() {
+            try {
+                const response = await fetch('/api/resources');
+                const data = await response.json();
+
+                const container = document.getElementById('resources-container');
+                container.innerHTML = '';
+
+                data.resources.forEach(resource => {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'col-md-4';
+                    colDiv.innerHTML = `
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="${resource.icon}"></i>
+                            </div>
+                            <h4>${resource.title}</h4>
+                            <p>${resource.description}</p>
+                        </div>
+                    `;
+                    container.appendChild(colDiv);
+                });
+            } catch (error) {
+                console.error('Error loading resources:', error);
+            }
+        }
+
+        // Chatboard functionality
+        function addMessageToChat(sender, message, isUser = false) {
+            const chatMessages = document.getElementById('chat-messages');
+
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${isUser ? 'user-message' : 'ai-message'} mb-3`;
+
+            const avatarClass = isUser ? 'bg-success' : 'bg-primary';
+            const senderName = isUser ? 'You' : 'AI Assistant';
+            const icon = isUser ? 'fas fa-user' : 'fas fa-robot';
+
+            messageElement.innerHTML = `
+                <div class="d-flex align-items-start">
+                    <div class="avatar ${avatarClass} rounded-circle p-2 me-3">
+                        <i class="${icon} text-white"></i>
+                    </div>
+                    <div class="${isUser ? 'bg-success text-white' : 'bg-light'} rounded p-3">
+                        <small class="text-muted">${senderName}</small>
+                        <p class="mb-0 mt-1">${message}</p>
+                    </div>
+                </div>
+            `;
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message to chat
+            addMessageToChat('You', message, true);
+            input.value = '';
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    addMessageToChat('AI Assistant', data.response, false);
+                } else {
+                    addMessageToChat('AI Assistant', 'Sorry, I encountered an error processing your request. Please try again.', false);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addMessageToChat('AI Assistant', 'Sorry, I encountered an error processing your request. Please try again.', false);
+            }
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('message-input').value = message;
+            sendMessage();
+        }
+
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Update the loadChapters function to include dynamic content
+        async function loadChapters() {
+            try {
+                const response = await fetch('/api/chapters');
+                const data = await response.json();
+                chapters = data.chapters;
+                renderTableOfContents();
+
+                // Load dynamic features and resources after chapters are loaded
+                await loadFeatures();
+                await loadResources();
+            } catch (error) {
+                console.error('Error loading chapters:', error);
+                document.getElementById('toc-container').innerHTML = '<p class="text-danger">Error loading chapters</p>';
+            }
+        }
+
+        // Make functions available globally
         window.loadChapter = loadChapter;
+        window.sendMessage = sendMessage;
+        window.sendQuickMessage = sendQuickMessage;
+        window.handleMessageKeyPress = handleMessageKeyPress;
     </script>
 </body>
 </html>
