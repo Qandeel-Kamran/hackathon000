@@ -307,9 +307,9 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="progress mb-3">
-                        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0% Complete</div>
+                        <div class="progress-bar" id="reading-progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0% Complete</div>
                     </div>
-                    <small class="text-light">Your reading progress</small>
+                    <small class="text-light" id="reading-progress-text">Your reading progress: 0%</small>
                 </div>
             </div>
         </div>
@@ -455,6 +455,7 @@
                 chapters = data.chapters;
                 renderChapterNavBar();
                 renderTableOfContents();
+                initializeReadingProgress(); // Initialize reading progress after chapters are loaded
             } catch (error) {
                 console.error('Error loading chapters:', error);
                 document.getElementById('toc-container').innerHTML = '<p class="text-danger">Error loading chapters</p>';
@@ -839,12 +840,115 @@
         }
 
         
+        // Reading progress tracking
+        let readingProgress = {
+            completedChapters: [],
+            totalChapters: 0
+        };
+
+        // Load reading progress from localStorage
+        function loadReadingProgress() {
+            const savedProgress = localStorage.getItem('readingProgress');
+            if (savedProgress) {
+                readingProgress = JSON.parse(savedProgress);
+            }
+            updateReadingProgressDisplay();
+        }
+
+        // Save reading progress to localStorage
+        function saveReadingProgress() {
+            localStorage.setItem('readingProgress', JSON.stringify(readingProgress));
+            updateReadingProgressDisplay();
+        }
+
+        // Mark a chapter as completed
+        function markChapterCompleted(chapterId) {
+            if (!readingProgress.completedChapters.includes(chapterId)) {
+                readingProgress.completedChapters.push(chapterId);
+                saveReadingProgress();
+            }
+        }
+
+        // Update the reading progress display
+        function updateReadingProgressDisplay() {
+            if (readingProgress.totalChapters > 0) {
+                const progressPercent = Math.round((readingProgress.completedChapters.length / readingProgress.totalChapters) * 100);
+                const progressBar = document.getElementById('reading-progress-bar');
+                const progressText = document.getElementById('reading-progress-text');
+
+                if (progressBar && progressText) {
+                    progressBar.style.width = progressPercent + '%';
+                    progressBar.textContent = progressPercent + '% Complete';
+                    progressText.textContent = `Your reading progress: ${progressPercent}% (${readingProgress.completedChapters.length}/${readingProgress.totalChapters} chapters)`;
+
+                    // Update progress bar color based on completion
+                    progressBar.className = 'progress-bar';
+                    if (progressPercent < 30) {
+                        progressBar.classList.add('bg-info');
+                    } else if (progressPercent < 70) {
+                        progressBar.classList.add('bg-success');
+                    } else if (progressPercent < 90) {
+                        progressBar.classList.add('bg-warning');
+                    } else {
+                        progressBar.classList.add('bg-success');
+                    }
+                }
+            }
+        }
+
+        // Initialize reading progress when chapters are loaded
+        function initializeReadingProgress() {
+            readingProgress.totalChapters = chapters.length;
+            loadReadingProgress();
+        }
+
+        // Update the loadChapter function to mark chapters as completed
+        async function loadChapter(chapterId) {
+            try {
+                // Update active state in TOC
+                document.querySelectorAll('.toc-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Update active state in chapter nav bar
+                document.querySelectorAll('.chapter-nav-item button').forEach(button => {
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-outline-primary');
+                });
+
+                // Find and highlight the current chapter button
+                const chapterButtons = document.querySelectorAll('.chapter-nav-item button');
+                chapterButtons.forEach(button => {
+                    if (button.textContent.includes('Ch ' + chapterId)) {
+                        button.classList.remove('btn-outline-primary');
+                        button.classList.add('btn-primary');
+                    }
+                });
+
+                const response = await fetch(`/api/chapter/${chapterId}`);
+                const data = await response.json();
+
+                currentChapter = chapterId;
+
+                // Mark this chapter as completed if not already
+                markChapterCompleted(parseInt(chapterId));
+
+                // Process and display the chapter content
+                displayChapter(data, chapterId);
+            } catch (error) {
+                console.error('Error loading chapter:', error);
+                document.getElementById('chapter-display').innerHTML = '<p class="text-danger">Error loading chapter content</p>';
+            }
+        }
+
         // Make functions available globally
         window.loadChapter = loadChapter;
         window.sendMessage = sendMessage;
         window.sendQuickMessage = sendQuickMessage;
         window.handleMessageKeyPress = handleMessageKeyPress;
         window.showFeatureDetails = showFeatureDetails;
+        window.markChapterCompleted = markChapterCompleted;
+        window.updateReadingProgressDisplay = updateReadingProgressDisplay;
     </script>
 
     <!-- Floating Chat Button -->
