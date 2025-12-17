@@ -392,6 +392,17 @@
                         </div>
                         <div id="search-results" class="mt-3"></div>
                     </div>
+
+                    <!-- Reading Reminders -->
+                    <div class="sidebar mt-4">
+                        <h5 class="mb-3"><i class="fas fa-bell me-2"></i>Reading Reminders</h5>
+                        <div id="reminders-container">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-clock fa-2x mb-2"></i>
+                                <p class="mb-0">No upcoming reminders</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Chapter Content Area -->
@@ -585,6 +596,25 @@
                 }
                 navHtml += '</div>';
             }
+
+            // Add chapter completion options at the end of the chapter
+            navHtml += `
+                <div class="chapter-completion mt-4 p-3 bg-light rounded">
+                    <h5><i class="fas fa-check-circle me-2"></i>Chapter Complete!</h5>
+                    <p class="mb-3">You've finished reading this chapter. What would you like to do next?</p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-success" onclick="completeChapter(${chapterId})">
+                            <i class="fas fa-check me-1"></i> Mark as Complete
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="remindLater(${chapterId})">
+                            <i class="fas fa-clock me-1"></i> Remind Me Later
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="continueReading()">
+                            <i class="fas fa-book me-1"></i> Continue Reading
+                        </button>
+                    </div>
+                </div>
+            `;
 
             document.getElementById('chapter-display').innerHTML = `
                 <div class="chapter-content">
@@ -941,6 +971,162 @@
             }
         }
 
+        // Chapter completion and reminder functionality
+        function completeChapter(chapterId) {
+            markChapterCompleted(chapterId);
+            showNotification(`Chapter ${chapterId} marked as complete! Great job!`, 'success');
+
+            // Navigate to next chapter if available
+            const nextChapter = parseInt(chapterId) < 18 ? parseInt(chapterId) + 1 : null;
+            if (nextChapter) {
+                setTimeout(() => loadChapter(nextChapter), 1500);
+            }
+        }
+
+        function remindLater(chapterId) {
+            // Set a reminder for later (e.g., 30 minutes from now)
+            const reminderTime = new Date();
+            reminderTime.setMinutes(reminderTime.getMinutes() + 30); // 30 minutes later
+
+            // Save reminder to localStorage
+            const reminders = JSON.parse(localStorage.getItem('readingReminders') || '[]');
+            reminders.push({
+                chapterId: chapterId,
+                title: `Continue reading Chapter ${chapterId}`,
+                time: reminderTime.toISOString(),
+                notified: false
+            });
+
+            localStorage.setItem('readingReminders', JSON.stringify(reminders));
+
+            showNotification(`Reminder set for Chapter ${chapterId} in 30 minutes`, 'info');
+
+            // Check for reminders periodically
+            checkReminders();
+        }
+
+        function continueReading() {
+            // Scroll to the top of the page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showNotification('Happy reading!', 'info');
+        }
+
+        // Show notification to user
+        function showNotification(message, type = 'info') {
+            // Remove any existing notifications
+            const existingNotifications = document.querySelectorAll('.notification-toast');
+            existingNotifications.forEach(note => note.remove());
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification-toast alert alert-${type} position-fixed top-0 end-0 m-3 fade`;
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            notification.innerHTML = `
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+                <div>${message}</div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Show animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.classList.contains('show')) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.remove();
+                        }
+                    }, 150);
+                }
+            }, 5000);
+        }
+
+        // Update the reminders display in the sidebar
+        function updateRemindersDisplay() {
+            const reminders = JSON.parse(localStorage.getItem('readingReminders') || '[]');
+            const now = new Date();
+            const upcomingReminders = reminders.filter(reminder => !reminder.notified && new Date(reminder.time) > now);
+
+            const container = document.getElementById('reminders-container');
+
+            if (upcomingReminders.length > 0) {
+                let html = '';
+                upcomingReminders.forEach(reminder => {
+                    const reminderTime = new Date(reminder.time);
+                    const timeDiff = Math.round((reminderTime - now) / (1000 * 60)); // minutes
+                    const timeString = timeDiff > 0 ? `${timeDiff} minute${timeDiff !== 1 ? 's' : ''}` : 'less than a minute';
+
+                    html += `
+                        <div class="alert alert-info mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Chapter ${reminder.chapterId}</small>
+                                    <div>Continue reading in ${timeString}</div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-danger" onclick="cancelReminder(${reminder.chapterId})">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = `
+                    <div class="text-center text-muted">
+                        <i class="fas fa-clock fa-2x mb-2"></i>
+                        <p class="mb-0">No upcoming reminders</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Cancel a specific reminder
+        function cancelReminder(chapterId) {
+            const reminders = JSON.parse(localStorage.getItem('readingReminders') || '[]');
+            const filteredReminders = reminders.filter(reminder =>
+                !(reminder.chapterId == chapterId && !reminder.notified)
+            );
+
+            localStorage.setItem('readingReminders', JSON.stringify(filteredReminders));
+            updateRemindersDisplay();
+            showNotification(`Reminder for Chapter ${chapterId} cancelled`, 'info');
+        }
+
+        // Check for and process reminders
+        function checkReminders() {
+            const reminders = JSON.parse(localStorage.getItem('readingReminders') || '[]');
+            const now = new Date();
+
+            reminders.forEach(reminder => {
+                if (!reminder.notified && new Date(reminder.time) <= now) {
+                    // Show notification for this reminder
+                    showNotification(`Time to continue reading Chapter ${reminder.chapterId}!`, 'warning');
+                    reminder.notified = true;
+
+                    // Update the reminders in localStorage
+                    localStorage.setItem('readingReminders', JSON.stringify(reminders));
+                }
+            });
+
+            // Update the display
+            updateRemindersDisplay();
+        }
+
+        // Initialize reminder checking when page loads
+        setInterval(checkReminders, 60000); // Check every minute
+
+        // Initialize the reminders display when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRemindersDisplay();
+        });
+
         // Make functions available globally
         window.loadChapter = loadChapter;
         window.sendMessage = sendMessage;
@@ -949,6 +1135,13 @@
         window.showFeatureDetails = showFeatureDetails;
         window.markChapterCompleted = markChapterCompleted;
         window.updateReadingProgressDisplay = updateReadingProgressDisplay;
+        window.completeChapter = completeChapter;
+        window.remindLater = remindLater;
+        window.continueReading = continueReading;
+        window.showNotification = showNotification;
+        window.checkReminders = checkReminders;
+        window.updateRemindersDisplay = updateRemindersDisplay;
+        window.cancelReminder = cancelReminder;
     </script>
 
     <!-- Floating Chat Button -->
