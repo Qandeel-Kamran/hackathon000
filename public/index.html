@@ -285,12 +285,20 @@
     <!-- Chapter Navigation Bar -->
     <div class="container-fluid bg-light py-2 mb-4">
         <div class="container">
-            <div class="d-flex overflow-x-auto pb-2" style="white-space: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;">
-                <div class="d-flex" id="chapter-nav-container">
-                    <!-- Chapter navigation items will be loaded here -->
-                    <div class="text-center mx-1">
-                        <div class="spinner-border spinner-border-sm text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">Chapters</h5>
+                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#chapter-nav-collapse" aria-expanded="true" aria-controls="chapter-nav-collapse">
+                    <i class="fas fa-chevron-up"></i> <span class="toggle-text">Hide</span>
+                </button>
+            </div>
+            <div class="collapse show" id="chapter-nav-collapse">
+                <div class="d-flex overflow-x-auto pb-2" style="white-space: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;">
+                    <div class="d-flex" id="chapter-nav-container">
+                        <!-- Chapter navigation items will be loaded here -->
+                        <div class="text-center mx-1">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -602,6 +610,20 @@
             // Process the content to handle code blocks, callouts, etc.
             let processedContent = processMarkdownContent(data.content);
 
+            // Add reading progress indicator
+            const readingProgress = getChapterReadingProgress(chapterId);
+            const progressHtml = `
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <small class="text-muted">Reading Progress</small>
+                        <small class="text-muted">${readingProgress}% read</small>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar" role="progressbar" style="width: ${readingProgress}%" aria-valuenow="${readingProgress}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            `;
+
             // Add navigation
             const prevChapter = parseInt(chapterId) > 1 ? parseInt(chapterId) - 1 : null;
             const nextChapter = parseInt(chapterId) < 18 ? parseInt(chapterId) + 1 : null;
@@ -642,12 +664,16 @@
             `;
 
             document.getElementById('chapter-display').innerHTML = `
-                <div class="chapter-content">
+                <div class="chapter-content" id="chapter-${chapterId}">
                     <h2>${title}</h2>
-                    <div class="content-body">${processedContent}</div>
+                    ${progressHtml}
+                    <div class="content-body" id="content-body-${chapterId}">${processedContent}</div>
                     ${navHtml}
                 </div>
             `;
+
+            // Set up scroll tracking for reading progress
+            setupReadingProgressTracking(chapterId);
         }
 
         // Process markdown content to HTML
@@ -937,22 +963,37 @@
         // Update the reading progress display
         function updateReadingProgressDisplay() {
             if (readingProgress.totalChapters > 0) {
-                const progressPercent = Math.round((readingProgress.completedChapters.length / readingProgress.totalChapters) * 100);
+                // Calculate progress based on both completed chapters and reading progress within chapters
+                let totalProgress = 0;
+
+                // Add 100% for each completed chapter
+                totalProgress += readingProgress.completedChapters.length * 100;
+
+                // Add reading progress for each incomplete chapter
+                for (let i = 1; i <= readingProgress.totalChapters; i++) {
+                    if (!readingProgress.completedChapters.includes(i)) {
+                        const chapterProgress = getChapterReadingProgress(i);
+                        totalProgress += chapterProgress;
+                    }
+                }
+
+                // Calculate overall percentage
+                const overallProgress = Math.round(totalProgress / readingProgress.totalChapters);
                 const progressBar = document.getElementById('reading-progress-bar');
                 const progressText = document.getElementById('reading-progress-text');
 
                 if (progressBar && progressText) {
-                    progressBar.style.width = progressPercent + '%';
-                    progressBar.textContent = progressPercent + '% Complete';
-                    progressText.textContent = `Your reading progress: ${progressPercent}% (${readingProgress.completedChapters.length}/${readingProgress.totalChapters} chapters)`;
+                    progressBar.style.width = overallProgress + '%';
+                    progressBar.textContent = overallProgress + '% Complete';
+                    progressText.textContent = `Your reading progress: ${overallProgress}% (based on ${readingProgress.completedChapters.length} completed chapters and partial progress in others)`;
 
                     // Update progress bar color based on completion
                     progressBar.className = 'progress-bar';
-                    if (progressPercent < 30) {
+                    if (overallProgress < 30) {
                         progressBar.classList.add('bg-info');
-                    } else if (progressPercent < 70) {
+                    } else if (overallProgress < 70) {
                         progressBar.classList.add('bg-success');
-                    } else if (progressPercent < 90) {
+                    } else if (overallProgress < 90) {
                         progressBar.classList.add('bg-warning');
                     } else {
                         progressBar.classList.add('bg-success');
@@ -1167,6 +1208,95 @@
             updateRemindersDisplay();
         });
 
+        // Reading progress tracking functions
+        function getChapterReadingProgress(chapterId) {
+            const progressData = JSON.parse(localStorage.getItem('chapterReadingProgress') || '{}');
+            return progressData[chapterId] || 0;
+        }
+
+        function setChapterReadingProgress(chapterId, progress) {
+            const progressData = JSON.parse(localStorage.getItem('chapterReadingProgress') || '{}');
+            progressData[chapterId] = progress;
+            localStorage.setItem('chapterReadingProgress', JSON.stringify(progressData));
+
+            // Update the overall reading progress
+            updateReadingProgressDisplay();
+        }
+
+        function setupReadingProgressTracking(chapterId) {
+            const chapterElement = document.getElementById(`chapter-${chapterId}`);
+            if (!chapterElement) return;
+
+            // Add scroll event listener to track reading progress
+            let ticking = false;
+
+            const calculateReadingProgress = () => {
+                if (!chapterElement) return;
+
+                const chapterTop = chapterElement.offsetTop;
+                const chapterHeight = chapterElement.offsetHeight;
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+
+                // Calculate how much of the chapter is visible in the viewport
+                const elementTop = chapterElement.getBoundingClientRect().top + scrollTop;
+                const elementBottom = elementTop + chapterHeight;
+
+                // Calculate progress based on scroll position
+                const viewportTop = scrollTop;
+                const viewportBottom = scrollTop + windowHeight;
+
+                // Determine how much of the chapter content is above the viewport
+                const contentAboveViewport = Math.max(0, elementTop - viewportTop);
+                const contentInViewport = Math.min(chapterHeight, viewportBottom - elementTop);
+                const contentBelowViewport = Math.max(0, elementBottom - viewportBottom);
+
+                // Calculate percentage of chapter that has been scrolled past
+                let progress = 0;
+                if (chapterHeight > 0) {
+                    progress = Math.min(100, Math.max(0, ((viewportTop - elementTop + windowHeight) / chapterHeight) * 100));
+                }
+
+                // Update the progress display in the chapter
+                const progressElement = chapterElement.querySelector('.progress-bar');
+                const progressText = chapterElement.querySelector('.text-muted:last-child');
+
+                if (progressElement) {
+                    progressElement.style.width = progress + '%';
+                    progressElement.setAttribute('aria-valuenow', progress);
+                }
+
+                if (progressText) {
+                    progressText.textContent = Math.round(progress) + '% read';
+                }
+
+                // Save the progress to localStorage
+                setChapterReadingProgress(chapterId, Math.round(progress));
+            };
+
+            // Throttle scroll events to improve performance
+            const onScroll = () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        calculateReadingProgress();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            };
+
+            // Add scroll event listener
+            window.addEventListener('scroll', onScroll);
+
+            // Also run once initially to set the correct progress
+            setTimeout(calculateReadingProgress, 100);
+
+            // Clean up event listener when loading a new chapter
+            window.addEventListener('beforeunload', () => {
+                window.removeEventListener('scroll', onScroll);
+            });
+        }
+
         // Make functions available globally
         window.loadChapter = loadChapter;
         window.sendMessage = sendMessage;
@@ -1182,6 +1312,30 @@
         window.checkReminders = checkReminders;
         window.updateRemindersDisplay = updateRemindersDisplay;
         window.cancelReminder = cancelReminder;
+        window.getChapterReadingProgress = getChapterReadingProgress;
+        window.setChapterReadingProgress = setChapterReadingProgress;
+        window.setupReadingProgressTracking = setupReadingProgressTracking;
+
+        // Add event listener for chapter navigation collapse toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up the toggle button for chapter navigation
+            const collapseElement = document.getElementById('chapter-nav-collapse');
+            collapseElement.addEventListener('hide.bs.collapse', function () {
+                const toggleBtn = document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#chapter-nav-collapse"]');
+                const icon = toggleBtn.querySelector('i');
+                const textSpan = toggleBtn.querySelector('.toggle-text');
+                icon.className = 'fas fa-chevron-down';
+                textSpan.textContent = 'Show';
+            });
+
+            collapseElement.addEventListener('show.bs.collapse', function () {
+                const toggleBtn = document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#chapter-nav-collapse"]');
+                const icon = toggleBtn.querySelector('i');
+                const textSpan = toggleBtn.querySelector('.toggle-text');
+                icon.className = 'fas fa-chevron-up';
+                textSpan.textContent = 'Hide';
+            });
+        });
     </script>
 
     <!-- Floating Chat Button -->
