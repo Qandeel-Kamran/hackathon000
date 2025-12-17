@@ -190,11 +190,6 @@ app.get('/api/resources', (req, res) => {
             description: "Complete textbook content with examples, exercises, and solutions."
         },
         {
-            icon: "fas fa-video",
-            title: "Video Lectures",
-            description: "Companion video lectures for each chapter with expert explanations."
-        },
-        {
             icon: "fas fa-code",
             title: "Code Repository",
             description: "Complete code examples and exercises available for download and experimentation."
